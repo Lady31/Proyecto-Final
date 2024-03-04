@@ -63,8 +63,8 @@
         <properties>
           <background color="-592661"/>
           <model>
-            <item value="ADMINISTRADOR"/>
-            <item value="PERSONAL MÉDICO"/>
+            <item value="admin"/>
+            <item value="medico"/>
           </model>
         </properties>
       </component>
