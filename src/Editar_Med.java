@@ -24,7 +24,7 @@ public class Editar_Med extends JFrame {
 
     public Editar_Med() {
         setContentPane(paneledit);
-        setSize(700,500);
+        setSize(700, 500);
         setVisible(true);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -33,6 +33,9 @@ public class Editar_Med extends JFrame {
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                modificar modifi = new modificar(nombreUsuario);
+                modifi.setVisible(true);
+
                 dispose();
             }
         });
@@ -61,13 +64,21 @@ public class Editar_Med extends JFrame {
         String rol = comboBox1.getSelectedItem().toString();
 
         try (Connection connection = conexion_base()) {
-            String sql = "UPDATE personal_medico SET nombre_de_usuario = ?, cedula = ?, contraseña = ?, rol = ? WHERE codigo = ?";
+            String sql;
+            if (rol.equals("medico")) {
+                sql = "UPDATE personal_medico SET usuario = ?, cedula = ?, contraseña = ? WHERE codigo = ?";
+            } else if (rol.equals("administrador")) {
+                sql = "UPDATE administrador SET usuario = ?, cedula = ?, contraseña = ? WHERE codigo = ?";
+            } else {
+                JOptionPane.showMessageDialog(null, "Rol no válido", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             PreparedStatement pstm = connection.prepareStatement(sql);
             pstm.setString(1, nombreUsuario);
             pstm.setString(2, cedula);
             pstm.setString(3, contraseña);
-            pstm.setString(4, rol);
-            pstm.setString(5, codigo);
+            pstm.setString(4, codigo);
             int rowsUpdated = pstm.executeUpdate();
 
             if (rowsUpdated > 0) {
@@ -82,19 +93,25 @@ public class Editar_Med extends JFrame {
 
     private void cargarInformacionUsuario(String codigo) {
         try (Connection connection = conexion_base()) {
-            String sql = "SELECT * FROM personal_medico WHERE codigo = ?";
+            String sql = "SELECT * FROM personal_medico WHERE codigo = ? " +
+                    "UNION " +
+                    "SELECT * FROM administrador WHERE codigo = ?";
+
             PreparedStatement pstm = connection.prepareStatement(sql);
             pstm.setString(1, codigo);
+            pstm.setString(2, codigo);
             ResultSet rs = pstm.executeQuery();
 
             if (rs.next()) {
                 // Cargar la información del usuario en los campos de texto y el JComboBox
-                usu_med.setText(rs.getString("nombre_de_usuario"));
+                usu_med.setText(rs.getString("usuario"));
                 Cod_usu.setText(rs.getString("codigo"));
                 usu_cedula.setText(rs.getString("cedula"));
                 usu_contra.setText(rs.getString("contraseña"));
+
                 // Establecer el valor seleccionado en el JComboBox
-                comboBox1.setSelectedItem(rs.getString("rol"));
+                String rol = rs.getString("rol");
+                comboBox1.setSelectedItem(rol);
             } else {
                 JOptionPane.showMessageDialog(null, "No se encontró ningún usuario con el código especificado", "Error", JOptionPane.ERROR_MESSAGE);
             }

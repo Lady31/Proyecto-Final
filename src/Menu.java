@@ -53,8 +53,8 @@ public class Menu extends JFrame{
         gestionDePersonalButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mostrarTabla();
-
+                Tablas tablas = new Tablas();
+                tablas.setVisible(true);
             }
         });
         agregarNuevoMedicoButton.addActionListener(new ActionListener() {
@@ -67,47 +67,13 @@ public class Menu extends JFrame{
                 frame.dispose();
             }
         });
-    }
-    private void mostrarTabla() {
-        try (Connection connection = conexion_base()) {
-            String sql = "SELECT * FROM personal_medico";
-            PreparedStatement pstm = connection.prepareStatement(sql);
-            ResultSet rs = pstm.executeQuery();
+        reportesEstadisticosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-            // Crear el modelo de la tabla
-            DefaultTableModel tableModel = new DefaultTableModel();
-            // Añadir las columnas al modelo de la tabla
-            tableModel.addColumn("ID");
-            tableModel.addColumn("Usuario");
-            tableModel.addColumn("Código");
-            tableModel.addColumn("Cédula");
-            tableModel.addColumn("Rol");
 
-            // Agregar filas a la tabla con los datos de la base de datos
-            while (rs.next()) {
-                Object[] fila = new Object[5]; // Hay 5 columnas en la tabla
-                fila[0] = rs.getInt("id_medico");
-                fila[1] = rs.getString("usuario");
-                fila[2] = rs.getString("codigo");
-                fila[3] = rs.getString("cedula");
-                fila[4] = rs.getString("rol");
-                tableModel.addRow(fila);
             }
-
-            // Crear la tabla con el modelo de tabla creado
-            JTable table = new JTable(tableModel);
-            // Crear el JScrollPane y agregar la tabla al JScrollPane
-            JScrollPane scrollPane = new JScrollPane(table);
-            // Limpiar el panel_muestra antes de agregar la tabla
-            panel_muestra.removeAll();
-            // Agregar el JScrollPane al panel_muestra
-            panel_muestra.add(scrollPane);
-            // Refrescar el panel para que se muestre la tabla
-            panel_muestra.revalidate();
-            panel_muestra.repaint();
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al obtener datos de la base de datos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        });
     }
+
 }

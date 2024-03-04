@@ -8,6 +8,7 @@ public class modificar extends JFrame {
     private JRadioButton añadirNuevoMedicoRadioButton;
     private JRadioButton modificarMedicoRadioButton;
     private JRadioButton eliminarMedicoRadioButton;
+    private JRadioButton volverRadioButton;
     private String nombreUsuario;
 
     private Connection conexion_base() throws SQLException {
@@ -45,6 +46,26 @@ public class modificar extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 eliminarUsuario();
+            }
+        });
+        añadirNuevoMedicoRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Agregar agregar =  new Agregar();
+                agregar.setVisible(true);
+                dispose();
+                JFrame frame=(JFrame) SwingUtilities.getWindowAncestor(modificar);
+                frame.dispose();
+            }
+        });
+        volverRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Menu menu = new Menu(nombreUsuario);
+                menu.setVisible(true);
+                dispose();
+                JFrame frame=(JFrame) SwingUtilities.getWindowAncestor(modificar);
+                frame.dispose();
             }
         });
     }
