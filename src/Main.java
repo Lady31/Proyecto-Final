@@ -1,5 +1,4 @@
 import javax.swing.*;
-
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -9,10 +8,7 @@ public class Main {
                 login.setSize(700,500);
                 login.setVisible(true);
                 login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
             }
         });
-
     }
-
 }
