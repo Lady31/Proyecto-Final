@@ -30,7 +30,11 @@ public class Agregar extends JFrame {
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                modificar modi = new modificar(nombreUsuario);
+                modi.setVisible(true);
                 dispose();
+                JFrame frame=(JFrame) SwingUtilities.getWindowAncestor(panel1);
+                frame.dispose();
             }
         });
 
@@ -54,9 +58,9 @@ public class Agregar extends JFrame {
             try (Connection connection = conexion_base()) {
                 String sql;
                 if (rol.equals("medico")) {
-                    sql = "INSERT INTO personal_medico (nombre_de_usuario, codigo, cedula, contraseña, rol) VALUES (?, ?, ?, ?, ?)";
-                } else if (rol.equals("admin")) {
-                    sql = "INSERT INTO administradores (nombre_de_usuario, codigo, cedula, contraseña, rol) VALUES (?, ?, ?, ?, ?)";
+                    sql = "INSERT INTO personal_medico (usuario, codigo, cedula, contraseña, rol) VALUES (?, ?, ?, ?, ?)";
+                } else if (rol.equals("administrador")) {
+                    sql = "INSERT INTO administrador (usuario, codigo, cedula, contraseña, rol) VALUES (?, ?, ?, ?, ?)";
                 } else {
                     JOptionPane.showMessageDialog(null, "Rol no válido", "Error", JOptionPane.ERROR_MESSAGE);
                     return;

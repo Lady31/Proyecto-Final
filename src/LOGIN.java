@@ -41,11 +41,16 @@ public class LOGIN extends JFrame {
             String contra = new String(clave.getPassword()).trim();
             String rolSeleccionado = comborol.getSelectedItem().toString();
 
-            String sql = "SELECT * FROM personal_medico WHERE usuario = ? AND contraseña = ? AND rol = ?";
+            String sql = "SELECT * FROM personal_medico WHERE usuario = ? AND contraseña = ? AND rol = ? " +
+                    "UNION " +
+                    "SELECT * FROM administrador WHERE usuario = ? AND contraseña = ? AND rol = ?";
             PreparedStatement pstm = connection.prepareStatement(sql);
             pstm.setString(1, nombreusu);
             pstm.setString(2, contra);
             pstm.setString(3, rolSeleccionado);
+            pstm.setString(4, nombreusu);
+            pstm.setString(5, contra);
+            pstm.setString(6, rolSeleccionado);
             ResultSet rs = pstm.executeQuery();
 
             if (rs.next()) {
@@ -54,15 +59,15 @@ public class LOGIN extends JFrame {
                 JOptionPane.showMessageDialog(null, "CREDENCIALES CORRECTAS", "Info", JOptionPane.INFORMATION_MESSAGE);
 
                 // Verificar el rol del usuario y crear la pantalla correspondiente
-                if (rolUsuario.equals("admin")) {
+                if (rolUsuario.equals("administrador")) {
                     Menu menu = new Menu(nombreUsuario);
                     menu.setVisible(true);
                     dispose();
                     JFrame frame=(JFrame) SwingUtilities.getWindowAncestor(panelogin);
                     frame.dispose();
                 } else if (rolUsuario.equals("medico")) {
-                    Menu menu = new Menu(nombreUsuario);
-                    menu.setVisible(true);
+                    personal perso = new personal(nombreUsuario);
+                    perso.setVisible(true);
                     dispose();
                     JFrame frame=(JFrame) SwingUtilities.getWindowAncestor(panelogin);
                     frame.dispose();
