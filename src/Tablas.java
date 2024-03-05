@@ -58,11 +58,8 @@ public class Tablas extends JFrame {
             }
 
             tablaUsuarios.setModel(tableModel);
-
-            // Agregar la tabla a un JScrollPane para que sea desplazable si hay muchos datos
             scrollPane.setViewportView(tablaUsuarios);
             tablaUsuarios.add(scrollPane);
-
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al obtener datos de la base de datos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

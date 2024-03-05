@@ -1,8 +1,11 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class Menu extends JFrame{
     private JPanel menupn;
@@ -70,10 +73,44 @@ public class Menu extends JFrame{
         reportesEstadisticosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
+                estadistico();
             }
         });
     }
+    public void estadistico(){
+        try (Connection connection = conexion_base()) {
+            String sql = "SELECT COUNT(*) AS total_pacientes FROM pacientes";
+            PreparedStatement pstm = connection.prepareStatement(sql);
+            ResultSet rs = pstm.executeQuery();
 
+            DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+            if (rs.next()) {
+                int totalPacientes = rs.getInt("total_pacientes");
+                dataset.addValue(totalPacientes, "Pacientes", "Total");
+            }
+
+            JFreeChart chart = ChartFactory.createBarChart(
+                    "Reporte Estadístico de Pacientes",
+                    "Categoría",
+                    "Cantidad",
+                    dataset
+            );
+
+            JFrame frame = new JFrame("Reporte Estadístico de Pacientes");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setSize(800, 600);
+            frame.setLocationRelativeTo(null);
+
+            ChartPanel chartPanel = new ChartPanel(chart);
+            frame.setContentPane(chartPanel);
+            frame.setVisible(true);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al obtener datos de la base de datos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }
+
+
+
+

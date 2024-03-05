@@ -26,12 +26,7 @@ public class modificar extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         this.nombreUsuario = nombreUsuario;
-        añadirNuevoMedicoRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
-        });
         modificarMedicoRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,17 +65,14 @@ public class modificar extends JFrame {
         });
     }
     private void eliminarUsuario() {
-        // Pedir al usuario que ingrese el código del médico a eliminar
         String codigoMedicoEliminar = JOptionPane.showInputDialog("Ingrese el código del médico a eliminar:");
 
         if (codigoMedicoEliminar != null && !codigoMedicoEliminar.isEmpty()) {
             try (Connection connection = conexion_base()) {
-                // Preparar la consulta para eliminar el usuario
                 String sql = "DELETE FROM personal_medico WHERE codigo = ?";
                 PreparedStatement pstm = connection.prepareStatement(sql);
                 pstm.setString(1, codigoMedicoEliminar);
 
-                // Ejecutar la consulta
                 int filasAfectadas = pstm.executeUpdate();
 
                 if (filasAfectadas > 0) {
